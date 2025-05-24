@@ -1,0 +1,32 @@
+name: Go CI
+
+on:
+  push:
+    branches:
+      - "**" # This is the key: run on all branches for push events
+  pull_request:
+    branches:
+      - "**" # And for all branches on pull requests
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download Go modules
+        run: go mod tidy
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run tests
+        run: go test -v ./...
